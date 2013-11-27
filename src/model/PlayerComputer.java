@@ -20,11 +20,11 @@ public class PlayerComputer extends Player {
   }
 
   @Override
-  public void setMove(Move m) {
-    if (m == null) {
+  public void setMove(Move newMove) {
+    if (newMove == null) {
       move = generateNextMove();
     } else {
-      move = m;
+      move = newMove;
     }
   }
 

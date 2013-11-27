@@ -6,11 +6,11 @@ import org.junit.Test;
 public class ViewTest {
 
   @Test
-  public void create_new_human_VS_computer_game_test() {
-    Controller rps = new Controller();
-    View view = rps.getView();
-    view.press_human_VS_computer_button();
-    Game game = rps.getGame();
+  public void createNewHumanVSComputerGameTest() {
+    final RPS rps = new RPS();
+    final View view = rps.getView();
+    view.pressHumanVSComputerButton();
+    final Game game = rps.getGame();
     assertNotNull("New game is not created on button pressed.",
         game);
     assertTrue("PlayerOne is of wrong type.",
@@ -25,31 +25,31 @@ public class ViewTest {
   }
 
   @Test
-  public void human_move_test() {
-    Controller rps = new Controller();
-    View view = rps.getView();
-    view.press_human_VS_computer_button();
-    view.press_human_VS_computer_button();
-    Game game = rps.getGame();
-    view.press_rock_button();
+  public void humanMoveTest() {
+    final RPS rps = new RPS();
+    final View view = rps.getView();
+    view.pressHumanVSComputerButton();
+    view.pressHumanVSComputerButton();
+    final Game game = rps.getGame();
+    view.pressRockButton();
     assertEquals("Human player move rock is not set correctly.",
          Move.ROCK, game.getPlayerOneMove());
 
-    view.press_paper_button();
+    view.pressPaperButton();
     assertEquals("Human player move paper is not set correctly.",
         Move.PAPER, game.getPlayerOneMove());
 
-    view.press_scissors_button();
+    view.pressScissorsButton();
     assertEquals("Human player move scissors is not set correctly.",
         Move.SCISSORS, game.getPlayerOneMove());
   }
 
   @Test
   public void createNewComputerVSComputerGameTest() {
-    Controller rps = new Controller();
-    View view = rps.getView();
-    view.press_computer_VS_computer_button();
-    Game game = rps.getGame();
+    final RPS rps = new RPS();
+    final View view = rps.getView();
+    view.pressComputerVSComputerButton();
+    final Game game = rps.getGame();
     assertNotNull("New game is not created on button pressed.",
         game);
     assertTrue("PlayerOne is of wrong type.",

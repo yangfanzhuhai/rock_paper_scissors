@@ -2,30 +2,30 @@ package model;
 
 public class Game extends java.util.Observable {
 
-  private Player playerOne;
-  private Player playerTwo;
-  private GameMode gameMode;
-  private Player winner;
+  private final Player playerOne;
+  private final Player playerTwo;
+  private final GameMode gameMode;
+  private String winnerName;
 
   private int playerOneScore;
   private int playerTwoScore;
   private int tieScore;
   private int totalRounds;
 
-  public Game(Player player1, Player player2, GameMode mode) {
-    this.playerOne = player1;
-    this.playerTwo = player2;
-    setGameMode(mode);
+  public Game(final Player player1, final Player player2, 
+		  final GameMode mode) {
+    playerOne = player1;
+    playerTwo = player2;
+    gameMode = mode;
     resetScores();
-    updateView();
   }
 
   private void resetScores() {
-    this.playerOneScore = 0;
-    this.playerTwoScore = 0;
-    this.tieScore = 0;
-    this.totalRounds = 0;
-    this.winner = null;
+    playerOneScore = 0;
+    playerTwoScore = 0;
+    tieScore = 0;
+    totalRounds = 0;
+    winnerName = "";
   }
 
   public Player getPlayerOne() {
@@ -64,10 +64,6 @@ public class Game extends java.util.Observable {
     return gameMode;
   }
 
-  public void setGameMode(GameMode mode) {
-    gameMode = mode;
-  }
-
   public Move getPlayerOneMove() {
     return playerOne.getMove();
   }
@@ -77,10 +73,7 @@ public class Game extends java.util.Observable {
   }
 
   public String getWinnerName() {
-    if (winner != null) {
-      return winner.getName();
-    }
-    return null;
+    return winnerName;
   }
 
   public void computeScore() {
@@ -119,30 +112,21 @@ public class Game extends java.util.Observable {
 
   private void playerOneWins() {
     playerOneScore++;
-    winner = playerOne;
+    winnerName = getPlayerOneName();
   }
 
   private void playerTwoWins() {
     playerTwoScore++;
-    winner = playerTwo;
+    winnerName = getPlayerTwoName();
   }
 
   private void tieRound() {
     tieScore++;
-    winner = null;
+    winnerName = "";
   }
 
   public void updateView() {
-    setChanged();
-    try {
-      javax.swing.SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          notifyObservers(this);
-        }
-      });
-    } catch (Exception e) {
-      System.err.println("View update didn't "
-            + "successfully complete");
-    }
+	    setChanged();
+	    notifyObservers(this);
   }
 }

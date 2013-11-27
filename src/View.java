@@ -1,11 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 
-import javax.swing.JApplet;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -15,54 +16,44 @@ import model.Move;
 
 public class View implements java.util.Observer {
 
-  private JApplet applet;
-  private Controller controller;
+  private JFrame jframe;
+  private RPS controller;
   private Container contentPane;
   private JPanel centrePane;
 
-  private JButton human_computer_button;
-  private JButton computer_computer_button;
+  private JButton humanComputerButton;
+  private JButton computerComputerButton;
   private JPanel modeButtonPane;
 
-  private JButton rock_button;
-  private JButton paper_button;
-  private JButton scissors_button;
+  private JButton rockButton;
+  private JButton paperButton;
+  private JButton scissorsButton;
   private JPanel moveButtonPane;
 
-  private JLabel player_one_score_label;
-  private JLabel player_two_score_label;
-  private JLabel tie_label;
+  private JLabel playerOneScoreLabel;
+  private JLabel playerTwoScoreLabel;
+  private JLabel tieLabel;
   private JPanel scorePane;
-
-  public View(JApplet javaapplet) {
-    applet = javaapplet;
-    contentPane = applet.getContentPane();
-    controller = (Controller) applet;
-    init();
+  
+  public View(RPS control) {
+	jframe = new JFrame("Rock Paper Scissors");
+	contentPane = jframe.getContentPane();
+	contentPane.setPreferredSize(new Dimension(700, 300));
+	controller = control;
+	createSelectModeGUI();
+	
   }
-
-  public void init() {
-      //Execute a job on the event-dispatching thread:
-      //creating this applet's GUI.
-      try {
-          javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
-              public void run() {
-                  createSelectModeGUI();
-              }
-          });
-      } catch (Exception e) {
-          System.err.println("createGUI didn't successfully complete");
-      }
+  
+  public JFrame getFrame() {
+	  return jframe;
   }
 
   public void createSelectModeGUI() {
-
     modeButtonPane = initModeButtonPane();
     contentPane.add(modeButtonPane, BorderLayout.SOUTH);
     centrePane = new JPanel();
     centrePane.setLayout(new BorderLayout());
     contentPane.add(centrePane, BorderLayout.CENTER);
-
   }
 
   private void addScorePane(String player1, int score1,
@@ -72,67 +63,67 @@ public class View implements java.util.Observer {
     String playerTwoScore = player2 + " Wins: "
               + score2 + "       ";
     String tie = "Ties: " + tieScore + "       ";
-    player_one_score_label = new JLabel(playerOneScore);
-    player_two_score_label = new JLabel(playerTwoScore);
-    tie_label = new JLabel(tie);
+    playerOneScoreLabel = new JLabel(playerOneScore);
+    playerTwoScoreLabel = new JLabel(playerTwoScore);
+    tieLabel = new JLabel(tie);
     scorePane = new JPanel();
-    scorePane.add(player_one_score_label);
-    scorePane.add(tie_label);
-    scorePane.add(player_two_score_label);
+    scorePane.add(playerOneScoreLabel);
+    scorePane.add(tieLabel);
+    scorePane.add(playerTwoScoreLabel);
     contentPane.add(scorePane, BorderLayout.NORTH);
   }
 
   private JButton createMoveButton(String buttonName, final Move move) {
-    JButton move_button = new JButton(buttonName);
+    JButton moveButton = new JButton(buttonName);
 
-    move_button.addActionListener(new ActionListener() {
+    moveButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           controller.setPlayerOneMove(move);
         }
     });
-    return move_button;
+    return moveButton;
   }
 
   private void addMoveButtonPane() {
-    rock_button = createMoveButton("Rock", Move.ROCK);
-    paper_button = createMoveButton("Paper", Move.PAPER);
-    scissors_button = createMoveButton("Scissors", Move.SCISSORS);
+    rockButton = createMoveButton("Rock", Move.ROCK);
+    paperButton = createMoveButton("Paper", Move.PAPER);
+    scissorsButton = createMoveButton("Scissors", Move.SCISSORS);
 
     moveButtonPane = new JPanel();
 
     // Lay out the buttons from left to right
-    moveButtonPane.add(rock_button);
-    moveButtonPane.add(paper_button);
-    moveButtonPane.add(scissors_button);
+    moveButtonPane.add(rockButton);
+    moveButtonPane.add(paperButton);
+    moveButtonPane.add(scissorsButton);
     centrePane.add(moveButtonPane, BorderLayout.SOUTH);
   }
 
   private JPanel initModeButtonPane() {
     // create a button for human v.s. computer
-    human_computer_button =
+    humanComputerButton =
         new JButton("Human VS Computer");
 
-    human_computer_button.addActionListener(new ActionListener() {
+    humanComputerButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          controller.create_human_VS_computer_game();
+          controller.createHumanVSComputerGame();
         }
     });
 
     // create a button for computer v.s. computer
-    computer_computer_button =
+    computerComputerButton =
         new JButton("Computer VS Computer");
 
-    computer_computer_button.addActionListener(new ActionListener() {
+    computerComputerButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          controller.create_computer_VS_computer_game();
+          controller.createComputerVSComputerGame();
         }
     });
 
     // create button panel for the two game mode buttons
     JPanel buttonPane = new JPanel();
     // Lay out the buttons from left to right
-    buttonPane.add(human_computer_button);
-    buttonPane.add(computer_computer_button);
+    buttonPane.add(humanComputerButton);
+    buttonPane.add(computerComputerButton);
     return buttonPane;
   }
 
@@ -157,7 +148,7 @@ public class View implements java.util.Observer {
 
   private void addResultLabelPane(String winnerName) {
     JLabel result;
-    if (winnerName == null) {
+    if (winnerName == "") {
       result = new JLabel(" Tie!");
     } else {
       result = new JLabel(winnerName + " won!");
@@ -182,9 +173,9 @@ public class View implements java.util.Observer {
 
   @Override
   public void update(Observable object, Object arg) {
-    Game game = (Game) object;
-    updateView(game);
-    applet.validate();
+	Game game = (Game) object;
+	updateView(game);
+	jframe.validate();
   }
 
   private void updateView(Game game) {
@@ -219,23 +210,23 @@ public class View implements java.util.Observer {
   }
 
   // methods for tests
-  public void press_human_VS_computer_button() {
-    human_computer_button.doClick();
+  public void pressHumanVSComputerButton() {
+    humanComputerButton.doClick();
   }
 
-  public void press_computer_VS_computer_button() {
-    computer_computer_button.doClick();
+  public void pressComputerVSComputerButton() {
+    computerComputerButton.doClick();
   }
 
-  public void press_rock_button() {
-    rock_button.doClick();
+  public void pressRockButton() {
+    rockButton.doClick();
   }
 
-  public void press_paper_button() {
-    paper_button.doClick();
+  public void pressPaperButton() {
+    paperButton.doClick();
   }
 
-  public void press_scissors_button() {
-    scissors_button.doClick();
+  public void pressScissorsButton() {
+    scissorsButton.doClick();
   }
 }

@@ -16,8 +16,8 @@ public class PlayerHuman extends Player {
   }
 
   @Override
-  public void setMove(Move m) {
-    move = m;
+  public void setMove(Move newMove) {
+    move = newMove;
   }
 
   @Override
