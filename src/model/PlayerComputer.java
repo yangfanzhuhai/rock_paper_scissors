@@ -1,33 +1,35 @@
 package model;
 
 public class PlayerComputer extends Player {
-	private Move move;
-	private String name;
-	
-	public PlayerComputer(String name) {
-		this.move = null;
-		this.name = name;
-	}
-	
-	@Override
-	public Move getMove() {
-		return this.move;
-	}
+  private Move move;
+  private String name;
 
-	public void setMove(Move move) {
-		if (move == null) {
-			this.move = generateNextMove();
-		} else {
-			this.move = move;
-		}
-	}
+  public PlayerComputer(String playername) {
+    this.move = null;
+    name = playername;
+  }
 
-	private Move generateNextMove() {
-		return Move.randomMove();
-	}
+  @Override
+  public Move getMove() {
+    return this.move;
+  }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void setMove(Move m) {
+    if (m == null) {
+      move = generateNextMove();
+    } else {
+      move = m;
+    }
+  }
+
+  private Move generateNextMove() {
+    return Move.randomMove();
+  }
+
 }
