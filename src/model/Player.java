@@ -1,10 +1,19 @@
 package model;
 
-public abstract class Player {
+public class Player {
+	
+  protected Move move;
+  private String name;
 
-  public abstract Move getMove();
+  protected Player (String playerName) {
+    name = playerName;
+  }
 
-  public abstract void setMove(Move move);
-
-  public abstract String getName();
+  public String getName() {
+    return name;
+  }
+  
+  public Move getMove() {
+    return move;
+  }
 }

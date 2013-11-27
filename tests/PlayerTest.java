@@ -13,7 +13,7 @@ public class PlayerTest {
   public void createAHumanPlayerTest() {
     Player player = new PlayerHuman("");
     assertTrue("PlayerOne is of wrong type.",
-        player instanceof PlayerHuman);
+        player instanceof Player);
   }
 
   @Test
@@ -25,7 +25,7 @@ public class PlayerTest {
 
   @Test
   public void setAndGetMoveForHumanPlayerTest() {
-    Player player = new PlayerHuman("");
+    PlayerHuman player = new PlayerHuman("");
     player.setMove(Move.PAPER);
     assertTrue("The move from humanplayer is of wrong type.",
         player.getMove() instanceof Move);
@@ -36,7 +36,6 @@ public class PlayerTest {
   @Test
   public void setAndGetMoveForComputerPlayerTest() {
     Player player = new PlayerComputer("");
-    player.setMove(null);
     assertTrue("The move from humanplayer is of wrong type.",
         player.getMove() instanceof Move);
   }

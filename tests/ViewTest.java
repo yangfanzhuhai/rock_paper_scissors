@@ -14,12 +14,12 @@ public class ViewTest {
     assertNotNull("New game is not created on button pressed.",
         game);
     assertTrue("PlayerOne is of wrong type.",
-        game.getPlayerOne() instanceof PlayerHuman);
+        game.getPlayer(0) instanceof PlayerHuman);
     assertTrue("PlayerTwo is of wrong type.",
-        game.getPlayerTwo() instanceof PlayerComputer);
+        game.getPlayer(1) instanceof PlayerComputer);
     assertTrue("Scores are not initialised for a new game.",
-        game.getPlayerOneScore() == 0
-        && game.getPlayerTwoScore() == 0
+        game.getPlayerScore(0) == 0
+        && game.getPlayerScore(1) == 0
         && game.getTieScore() == 0
         && game.getTotalRounds() == 0);
   }
@@ -29,19 +29,18 @@ public class ViewTest {
     final RPS rps = new RPS();
     final View view = rps.getView();
     view.pressHumanVSComputerButton();
-    view.pressHumanVSComputerButton();
     final Game game = rps.getGame();
     view.pressRockButton();
     assertEquals("Human player move rock is not set correctly.",
-         Move.ROCK, game.getPlayerOneMove());
-
+         Move.ROCK, game.getPlayerMove(0));
+    
     view.pressPaperButton();
     assertEquals("Human player move paper is not set correctly.",
-        Move.PAPER, game.getPlayerOneMove());
+        Move.PAPER, game.getPlayerMove(0));
 
     view.pressScissorsButton();
     assertEquals("Human player move scissors is not set correctly.",
-        Move.SCISSORS, game.getPlayerOneMove());
+        Move.SCISSORS, game.getPlayerMove(0));
   }
 
   @Test
@@ -53,12 +52,12 @@ public class ViewTest {
     assertNotNull("New game is not created on button pressed.",
         game);
     assertTrue("PlayerOne is of wrong type.",
-        game.getPlayerOne() instanceof PlayerComputer);
+        game.getPlayer(0) instanceof PlayerComputer);
     assertTrue("PlayerTwo is of wrong type.",
-        game.getPlayerTwo() instanceof PlayerComputer);
+        game.getPlayer(1) instanceof PlayerComputer);
     assertTrue("Scores are not initialised for a new game.",
-        game.getPlayerOneScore() == 0
-        && game.getPlayerTwoScore() == 0
+        game.getPlayerScore(0) == 0
+        && game.getPlayerScore(1) == 0
         && game.getTieScore() == 0
         && game.getTotalRounds() == 0);
   }

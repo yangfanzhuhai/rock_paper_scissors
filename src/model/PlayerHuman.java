@@ -2,27 +2,12 @@ package model;
 
 public class PlayerHuman extends Player {
 
-  private Move move;
-  private String name;
-
-  public PlayerHuman(String playerName) {
-    this.move = null;
-    name = playerName;
+  public PlayerHuman (String playerName) {
+    super(playerName);
   }
 
-  @Override
-  public Move getMove() {
-    return this.move;
-  }
-
-  @Override
   public void setMove(Move newMove) {
-    move = newMove;
-  }
-
-  @Override
-  public String getName() {
-    return name;
+    super.move = newMove;
   }
 
 }

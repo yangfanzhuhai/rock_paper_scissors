@@ -1,55 +1,61 @@
 package model;
 
 public class Game extends java.util.Observable {
-
-  private final Player playerOne;
-  private final Player playerTwo;
+ 
+  private final int NumPlayer = 2;
+  private final Player[] players;
+  private final int[] scores;
+  
+  private final Move[] currentMoves;
+  private final MoveComparator moveComparator;
   private final GameMode gameMode;
-  private String winnerName;
-
-  private int playerOneScore;
-  private int playerTwoScore;
+  
   private int tieScore;
   private int totalRounds;
+  private String winnerName;
 
-  public Game(final Player player1, final Player player2, 
-		  final GameMode mode) {
-    playerOne = player1;
-    playerTwo = player2;
-    gameMode = mode;
-    resetScores();
+  public Game(final GameMode mode) {
+    	gameMode = mode;
+		players = new Player[NumPlayer];
+		initPlayers();
+		scores = new int[NumPlayer];
+		resetScores();
+		currentMoves = new Move[NumPlayer];
+	  moveComparator = new MoveComparator();
+  }
+  
+  private void initPlayers() {
+  	  switch (gameMode) {
+  	    case HumanVSComputer:
+  	    	  players[0] = new PlayerHuman("You");
+  	      players[1] = new PlayerComputer("Computer");
+  	    	  break;
+  	    case ComputerVSComputer:
+  	    	  players[0] = new PlayerComputer("Computer 1");
+  	    	  players[1] = new PlayerComputer("Computer 2");
+  	    	  break;
+  	  }
   }
 
   private void resetScores() {
-    playerOneScore = 0;
-    playerTwoScore = 0;
+		for (int i = 0; i < NumPlayer; i++) {
+			scores[i] = 0;
+		}
     tieScore = 0;
     totalRounds = 0;
     winnerName = "";
   }
 
-  public Player getPlayerOne() {
-    return playerOne;
+  public Player getPlayer(int n) {
+    return players[n];
   }
 
-  public Player getPlayerTwo() {
-    return playerTwo;
+  public String getPlayerName(int n) {
+    return getPlayer(n).getName();
   }
 
-  public String getPlayerOneName() {
-    return playerOne.getName();
-  }
-
-  public String getPlayerTwoName() {
-    return playerTwo.getName();
-  }
-
-  public int getPlayerOneScore() {
-    return playerOneScore;
-  }
-
-  public int getPlayerTwoScore() {
-    return playerTwoScore;
+  public int getPlayerScore(int n) {
+    return scores[n];
   }
 
   public int getTieScore() {
@@ -64,69 +70,54 @@ public class Game extends java.util.Observable {
     return gameMode;
   }
 
-  public Move getPlayerOneMove() {
-    return playerOne.getMove();
-  }
-
-  public Move getPlayerTwoMove() {
-    return playerTwo.getMove();
+  public Move getPlayerMove(int n) {
+    return currentMoves[n];
   }
 
   public String getWinnerName() {
     return winnerName;
   }
-
-  public void computeScore() {
-    Move move1 = getPlayerOneMove();
-    Move move2 = getPlayerTwoMove();
-    if (move1 == move2) {
-      tieRound();
-    } else {
-      switch (move1) {
-        case ROCK:
-          if (move2 == Move.PAPER) {
-            playerTwoWins();
-          } else if (move2 == Move.SCISSORS) {
-            playerOneWins();
-          }
-          break;
-        case PAPER:
-          if (move2 == Move.ROCK) {
-            playerOneWins();
-          } else if (move2 == Move.SCISSORS) {
-            playerTwoWins();
-          }
-          break;
-        case SCISSORS:
-          if (move2 == Move.ROCK) {
-            playerTwoWins();
-          } else if (move2 == Move.PAPER) {
-            playerOneWins();
-          }
-          break;
-      }
-    }
-    totalRounds++;
-    updateView();
-  }
-
-  private void playerOneWins() {
-    playerOneScore++;
-    winnerName = getPlayerOneName();
-  }
-
-  private void playerTwoWins() {
-    playerTwoScore++;
-    winnerName = getPlayerTwoName();
+  
+  private void playerWins(int n) {
+    scores[n]++;
+    winnerName = getPlayerName(n);
   }
 
   private void tieRound() {
     tieScore++;
     winnerName = "";
   }
+  
+  private void updateCurrentMove() {
+    currentMoves[0] = getPlayer(0).getMove();
+    currentMoves[1] = getPlayer(1).getMove();
+  }
+
+  public void computeScore() {
+  		updateCurrentMove();
+    switch (moveComparator.compare(currentMoves[0], currentMoves[1])) {
+      case 0:
+    	    tieRound();
+    	    break;
+      case 1:
+    	    playerWins(0);
+    	    break;
+      case -1:
+    	    playerWins(1);
+    	    break;
+    }
+    totalRounds++;
+    updateView();
+  }
 
   public void updateView() {
 	    setChanged();
 	    notifyObservers(this);
+  }
+
+	public void setHumanMove(Move move) {
+		if (gameMode == GameMode.HumanVSComputer) {
+			((PlayerHuman) players[0]).setMove(move);
+		}
   }
 }

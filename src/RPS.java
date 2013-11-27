@@ -2,9 +2,6 @@
 import model.Game;
 import model.GameMode;
 import model.Move;
-import model.Player;
-import model.PlayerComputer;
-import model.PlayerHuman;
 
 public class RPS {
 
@@ -12,11 +9,11 @@ public class RPS {
   final private View view;
   
   public static void main(String[] args) {
-	  new RPS();
+    new RPS();
   }
   
   public RPS() {
-    this.view = new View(this);
+    view = new View(this);
   }
 
   public View getView() {
@@ -27,43 +24,22 @@ public class RPS {
     return game;
   }
 
-  public void createHumanVSComputerGame() {
-	final Player player1 = new PlayerHuman("You");
-    final Player player2 = new PlayerComputer("Computer");
-    game = new Game(player1, player2, GameMode.HumanVSComputer);
-    addView();
+  private void addViewToGame() {
+		game.addObserver(view);
+		game.updateView();
+  }
+  
+  public void createGame(GameMode mode) {
+    game = new Game(mode);
+    addViewToGame();
+  }
+  
+  public void setMove(Move move) {
+    game.setHumanMove(move);
   }
 
-private void addView() {
-	game.addObserver(view);
-    game.updateView();
-}
-
-  public void createComputerVSComputerGame() {
-    final Player player1 = new PlayerComputer("Computer 1");
-    final Player player2 = new PlayerComputer("Computer 2");
-    game = new Game(player1, player2,
-        GameMode.ComputerVSComputer);
-    addView();
+  public void runNextRound() {
+  		game.computeScore();
   }
-
-  public void setPlayerOneMove(Move move) {
-    if (game != null) {
-      final Player player = game.getPlayerOne();
-      player.setMove(move);
-
-      setPlayerTwoMove(null);
-      computeScore();
-    }
-  }
-
-  private void setPlayerTwoMove(Move move) {
-    final Player player = game.getPlayerTwo();
-    player.setMove(move);
-  }
-
-  private void computeScore() {
-    game.computeScore();
-  }
-
+  
 }
