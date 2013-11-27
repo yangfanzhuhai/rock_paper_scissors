@@ -40,15 +40,18 @@ public class View implements java.util.Observer {
 	contentPane = jframe.getContentPane();
 	contentPane.setPreferredSize(new Dimension(700, 300));
 	controller = control;
+	initFrame();
 	createSelectModeGUI();
-	
   }
   
-  public JFrame getFrame() {
-	  return jframe;
+  private void initFrame() {
+	jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	jframe.pack();
+	jframe.setResizable(false);
+	jframe.setVisible(true);
   }
 
-  public void createSelectModeGUI() {
+  private void createSelectModeGUI() {
     modeButtonPane = initModeButtonPane();
     contentPane.add(modeButtonPane, BorderLayout.SOUTH);
     centrePane = new JPanel();
